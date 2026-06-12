@@ -7,18 +7,15 @@ class Tracker:
         self._projects = []
         self._tasks = []
         self._load_all()
-
     def _load_all(self):
         self._users = [User.from_dict(d) for d in load_users()]
         self._projects = [Project.from_dict(d) for d in load_projects()]
         self._tasks = [Task.from_dict(d) for d in load_tasks()]
-
     def _save_all(self):
         save_users(self._users)
         save_projects(self._projects)
         save_tasks(self._tasks)
-
-    # ----- User operations -----
+    # ----- User -----
     def add_user(self, name, email):
         email = email.strip().lower()
         if any(u.email == email for u in self._users):
@@ -27,10 +24,8 @@ class Tracker:
         self._users.append(u)
         self._save_all()
         return u
-
     def list_users(self):
         return self._users.copy()
-
     def get_user(self, identifier):
         if str(identifier).isdigit():
             uid = int(identifier)
@@ -43,7 +38,6 @@ class Tracker:
                 if u.name.lower() == name:
                     return u
         return None
-
     def delete_user(self, identifier):
         user = self.get_user(identifier)
         if not user:
@@ -53,13 +47,11 @@ class Tracker:
         self._users = [u for u in self._users if u.id != user.id]
         self._save_all()
         return user
-
-    # ----- Project operations -----
+    # ----- Project -----
     def add_project(self, title, user_identifier, description="", due_date=""):
         owner = self.get_user(user_identifier)
         if not owner:
             raise ValueError(f"User '{user_identifier}' not found")
-        # check duplicate title for this user
         for p in self._projects:
             if p.owner_id == owner.id and p.title.lower() == title.lower():
                 raise ValueError(f"User already has a project named '{title}'")
@@ -68,7 +60,6 @@ class Tracker:
         owner.add_project(proj.id)
         self._save_all()
         return proj
-
     def list_projects(self, user_identifier=None):
         if user_identifier is None:
             return self._projects.copy()
@@ -76,7 +67,6 @@ class Tracker:
         if not user:
             raise ValueError(f"User '{user_identifier}' not found")
         return [p for p in self._projects if p.owner_id == user.id]
-
     def get_project(self, identifier):
         if str(identifier).isdigit():
             pid = int(identifier)
@@ -89,29 +79,23 @@ class Tracker:
                 if p.title.lower() == title:
                     return p
         return None
-
     def _delete_project_by_id(self, pid):
         proj = self.get_project(pid)
         if not proj:
             return
-        # delete its tasks
         self._tasks = [t for t in self._tasks if t.project_id != pid]
-        # remove from owner
         owner = self.get_user(proj.owner_id)
         if owner:
             owner.remove_project(pid)
-        # remove project
         self._projects = [p for p in self._projects if p.id != pid]
         self._save_all()
-
     def delete_project(self, identifier):
         proj = self.get_project(identifier)
         if not proj:
             raise ValueError(f"Project '{identifier}' not found")
         self._delete_project_by_id(proj.id)
         return proj
-
-    # ----- Task operations -----
+    # ----- Task -----
     def add_task(self, title, project_identifier, assigned_to="", status="todo"):
         proj = self.get_project(project_identifier)
         if not proj:
@@ -121,7 +105,6 @@ class Tracker:
         proj.add_task(task.id)
         self._save_all()
         return task
-
     def list_tasks(self, project_identifier=None):
         if project_identifier is None:
             return self._tasks.copy()
@@ -129,7 +112,6 @@ class Tracker:
         if not proj:
             raise ValueError(f"Project '{project_identifier}' not found")
         return [t for t in self._tasks if t.project_id == proj.id]
-
     def get_task(self, identifier, project_identifier=None):
         if str(identifier).isdigit():
             tid = int(identifier)
@@ -147,7 +129,6 @@ class Tracker:
                     else:
                         return t
         return None
-
     def complete_task(self, identifier, project_identifier=None):
         task = self.get_task(identifier, project_identifier)
         if not task:
@@ -155,7 +136,6 @@ class Tracker:
         task.complete()
         self._save_all()
         return task
-
     def start_task(self, identifier, project_identifier=None):
         task = self.get_task(identifier, project_identifier)
         if not task:
@@ -163,7 +143,6 @@ class Tracker:
         task.start()
         self._save_all()
         return task
-
     def delete_task(self, identifier, project_identifier=None):
         task = self.get_task(identifier, project_identifier)
         if not task:
