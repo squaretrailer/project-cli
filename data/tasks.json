@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "Write code",
+    "status": "todo",
+    "assigned_to": "Alice",
+    "project_id": 1
+  },
+  {
+    "id": 2,
+    "title": "Write code",
+    "status": "todo",
+    "assigned_to": "Chris",
+    "project_id": 1
+  }
+]

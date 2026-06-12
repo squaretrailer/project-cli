@@ -1,0 +1,21 @@
+[
+  {
+    "id": 1,
+    "title": "Learn Python",
+    "description": "Complete the tutorial",
+    "due_date": "2025-12-31",
+    "owner_id": 1,
+    "task_ids": [
+      1,
+      2
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Learn Python",
+    "description": "Complete the tutorial",
+    "due_date": "2025-12-31",
+    "owner_id": 2,
+    "task_ids": []
+  }
+]
