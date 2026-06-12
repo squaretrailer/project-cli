@@ -1,6 +1,5 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import pytest
 from models.user import User
 from models.project import Project
@@ -8,7 +7,6 @@ from models.task import Task
 
 @pytest.fixture(autouse=True)
 def reset_ids():
-    # Reset class-level ID counters before each test
     User._next_id = 1
     Project._next_id = 1
     Task._next_id = 1

@@ -1,6 +1,5 @@
 from tabulate import tabulate
 from colorama import Fore, Style, init
-
 init(autoreset=True)
 
 def print_users(users):
